@@ -13,6 +13,7 @@ namespace EticaretAPI.Persistance
         {
             get
             {
+                //Microsoft.Extensions.Configuration
                 ConfigurationManager configurationManager = new();
                 configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/ETicaretAPI.API"));
                 configurationManager.AddJsonFile("appsettings.json");
