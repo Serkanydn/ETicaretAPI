@@ -10,7 +10,7 @@ namespace EticaretAPI.Domain.Etities
     public  class Order:BaseEntity
     {
         //Eğer customerId koymazsak entity framework otomatik kendi koyacaktır.Koyar isek bu id ile customeri ilişkilendirecektir.
-        public int CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
 

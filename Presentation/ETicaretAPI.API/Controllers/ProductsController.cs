@@ -11,31 +11,42 @@ namespace ETicaretAPI.API.Controllers
     {
         readonly private IProductReadRepository _productReadRepository;
         readonly private IProductWriteRepository _productWriteRepository;
+        readonly private IOrderWriteRepository _orderWriteRepository;
+        readonly private IOrderReadRepository _orderReadRepository;
 
-        public ProductsController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
+
+        readonly private ICustomerWriteRepository _customerWriteRepository;
+
+        public ProductsController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IOrderWriteRepository orderWriteRepository, ICustomerWriteRepository customerWriteRepository, IOrderReadRepository orderReadRepository)
         {
             _productReadRepository = productReadRepository;
             _productWriteRepository = productWriteRepository;
+            _orderWriteRepository = orderWriteRepository;
+            _customerWriteRepository = customerWriteRepository;
+            _orderReadRepository = orderReadRepository;
         }
 
         [HttpGet("getproduct")]
-        public async Task<bool> Get()
+        public async Task Get()
         {
-            _productWriteRepository.AddRangeAsync(new()
-            {
 
-                new() { Id=Guid.NewGuid(), Name="Product 1", Price=100,CreatedDate=DateTime.Now,Stock=10},
-                new() { Id=Guid.NewGuid(), Name="Product 2", Price=200,CreatedDate=DateTime.Now,Stock=20},
-                new() { Id=Guid.NewGuid(), Name="Product 3", Price=300,CreatedDate=DateTime.Now,Stock=30}
-            });
-            await _productWriteRepository.SaveAsync();
-            return true;
+            var order = await _orderReadRepository.GetByIdAsync("129ab466-7b52-4048-ff91-08da02c3fa59");
+            order.Address = "Kars";
+            await _orderWriteRepository.SaveAsync();
+
         }
 
         [HttpGet("getproducts")]
-        public  IQueryable<Product> GetAll()
+        public IQueryable<Product> GetAll()
         {
-            return  _productReadRepository.GetAll(false);
+            return _productReadRepository.GetAll(false);
+        }
+
+        [HttpGet("getproductbyid")]
+        public async Task<IActionResult> Get(string id)
+        {
+            Product product = await _productReadRepository.GetByIdAsync(id);
+            return Ok(product);
         }
     }
 }
